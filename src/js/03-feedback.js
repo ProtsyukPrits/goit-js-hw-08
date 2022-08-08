@@ -7,33 +7,35 @@ const refs = {
 };
 
 refs.feedbackForm.addEventListener('submit', handleOnForm);
-refs.feedbackFormMessage.addEventListener(
+refs.feedbackForm.addEventListener(
   'input',
   throttle(handleOnMessage, 500)
 );
-refs.feedbackForm.addEventListener('input', e => {
-  formData[e.target.name] = e.target.value;
-  console.log(formData);
-});
 
+const STORAGE_KEY = 'feedback-form-state';
 const formData = {};
-populateTextarea();
+ populateTextarea();
+
 
 function handleOnForm(e) {
   e.preventDefault();
   e.currentTarget.reset();
-  localStorage.removeItem('feedback-form-state');
+  localStorage.removeItem(STORAGE_KEY);
 }
 
 function handleOnMessage(e) {
-  const value = e.target.value;
-  localStorage.setItem('feedback-form-state', value);
+  formData[`${e.target.name}`] = `${e.target.value}`;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
 }
 
 function populateTextarea() {
-  const savedMessage = localStorage.getItem('feedback-form-state');
+  const savedMessage = JSON.parse(localStorage.getItem(STORAGE_KEY));
 
-  if (savedMessage) {
-    refs.feedbackFormMessage.value = savedMessage;
+  if (savedMessage.email) {
+    refs.feedbackFormEmail.value = savedMessage.email;
+  }
+
+  if (savedMessage.message) {
+    refs.feedbackFormMessage.value = savedMessage.message;
   }
 }
