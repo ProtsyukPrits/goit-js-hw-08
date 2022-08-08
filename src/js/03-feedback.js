@@ -12,10 +12,15 @@ refs.feedbackForm.addEventListener(
   throttle(handleOnMessage, 500)
 );
 
+
 const STORAGE_KEY = 'feedback-form-state';
 const formData = {};
- populateTextarea();
 
+
+
+if (localStorage.getItem(STORAGE_KEY)) {
+  populateTextarea();
+}
 
 function handleOnForm(e) {
   e.preventDefault();
@@ -26,6 +31,7 @@ function handleOnForm(e) {
 function handleOnMessage(e) {
   formData[`${e.target.name}`] = `${e.target.value}`;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+  console.log(formData)
 }
 
 function populateTextarea() {
